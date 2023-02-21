@@ -1,7 +1,7 @@
 import vlc
 import time
 
-url = 'file.mp3'
+url = 'https://live.kissfm.ro/kissfm.aacp'
 
 #define VLC instance
 instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
