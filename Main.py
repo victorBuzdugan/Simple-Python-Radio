@@ -3,11 +3,12 @@ import time
 
 url = 'https://live.kissfm.ro/kissfm.aacp'
 
+
 #define VLC instance
 instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
 
 #Define VLC player
-player=instance.media_player_new()
+player = instance.media_player_new()
 
 #Define VLC media
 media=instance.media_new(url)
@@ -18,4 +19,6 @@ player.set_media(media)
 #Play the media
 player.play()
 
-time.sleep(5)
+a = input("Asa la misto")
+
+# instance.wait()
