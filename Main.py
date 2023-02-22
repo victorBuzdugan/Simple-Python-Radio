@@ -1,7 +1,8 @@
 import vlc
 import time
+from operator import itemgetter
 
-radioStations = (
+radioStations = [
     {'name' : 'Kiss FM', 'url' : 'https://live.kissfm.ro/kissfm.aacp'},
     {'name' : 'Europa FM', 'url' : 'http://astreaming.europafm.ro:8000/europafm_aacp48k'},
     {'name' : 'Digi FM', 'url' : 'http://edge76.rdsnet.ro:84/digifm/digifm.mp3'},
@@ -14,7 +15,9 @@ radioStations = (
     {'name' : 'Guerilla', 'url' : 'https://live.guerrillaradio.ro:8443/guerrilla.aac'},
     {'name' : 'm2O', 'url' : 'https://4c4b867c89244861ac216426883d1ad0.msvdn.net/radiom2o/radiom2o/master_ma.m3u8'},
     {'name' : 'Antenne Bayern', 'url' : 'https://stream.antenne.de/antenne/stream/mp3'}
-)
+]
+
+DEFAULT_RADIO = 'Kiss FM'
 
 #define VLC instance
 instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
