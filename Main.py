@@ -4,7 +4,7 @@ from operator import itemgetter
 
 radioStations = [
     {'name' : 'Kiss FM', 'url' : 'https://live.kissfm.ro/kissfm.aacp'},
-    {'name' : 'Europa FM', 'url' : 'http://astreaming.europafm.ro:8000/europafm_aacp48k'},
+    {'name' : 'Europa FM', 'url' : 'https://astreaming.edi.ro:8443/EuropaFM_aac'},
     {'name' : 'Digi FM', 'url' : 'http://edge76.rdsnet.ro:84/digifm/digifm.mp3'},
     {'name' : 'Radio Iasi?', 'url' : 'http://89.238.227.6:8202/'},
     {'name' : 'Virgin Radio', 'url' : 'https://astreaming.edi.ro:8443/VirginRadio_aac'},
@@ -21,6 +21,7 @@ DEFAULT_RADIO = 'Kiss FM'
 
 #define VLC instance
 instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
+instance.log_unset()
 
 #Define VLC player
 player = instance.media_player_new()
@@ -31,7 +32,7 @@ for radio in radioStations:
 
 selectedRadio = 0
 while True:
-    time.sleep(1)
+    # time.sleep(1)
     selectRadio = input("Select radio number ('0' for exit; default '1'): ") or '1'
     if selectRadio.lower() == 'n':
         if selectedRadio == len(radioStations)-1:
@@ -59,5 +60,3 @@ while True:
     print('\nNow playing:', radioStations[selectedRadio]['name'], '\n')
     continue
     
-
-# instance.wait()
