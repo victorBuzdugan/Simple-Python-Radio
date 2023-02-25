@@ -1,6 +1,7 @@
 import vlc
-import time
 from operator import itemgetter
+from tkinter import *
+from tkinter import ttk
 
 radioStations = [
     {'name' : 'Kiss FM', 'url' : 'https://live.kissfm.ro/kissfm.aacp'},
@@ -17,8 +18,31 @@ radioStations = [
     {'name' : 'Antenne Bayern', 'url' : 'https://stream.antenne.de/antenne/stream/mp3'}
 ]
 
-DEFAULT_RADIO = 'Kiss FM'
+def play():
+    instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
+    player = instance.media_player_new()
+    media = instance.media_new(radioStations[0]['url'])
+    player.set_media(media)
+    player.play()
 
+rootFrame = Tk()
+rootFrame.title("Radio")
+
+mainFrame = ttk.Frame(rootFrame)
+mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
+
+radioNowPlaying = radioStations[0]['name']
+nowPlayingLabel = ttk.Label(mainFrame, text=radioNowPlaying)
+playButton = ttk.Button(mainFrame, text="Play", command = play)
+
+ttk.Label(mainFrame, text="Now playing:").grid(column=1, row=1, sticky=(W, E))
+nowPlayingLabel.grid(column=1, row=2, sticky=(W, E))
+playButton.grid(column=1, row=3, sticky=(W))
+
+
+rootFrame.mainloop()
+
+"""
 #define VLC instance
 instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
 instance.log_unset()
@@ -59,4 +83,4 @@ while True:
     player.play()
     print('\nNow playing:', radioStations[selectedRadio]['name'], '\n')
     continue
-    
+  """  
