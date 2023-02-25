@@ -3,84 +3,54 @@ from operator import itemgetter
 from tkinter import *
 from tkinter import ttk
 
-radioStations = [
-    {'name' : 'Kiss FM', 'url' : 'https://live.kissfm.ro/kissfm.aacp'},
-    {'name' : 'Europa FM', 'url' : 'https://astreaming.edi.ro:8443/EuropaFM_aac'},
-    {'name' : 'Digi FM', 'url' : 'http://edge76.rdsnet.ro:84/digifm/digifm.mp3'},
-    {'name' : 'Radio Iasi?', 'url' : 'http://89.238.227.6:8202/'},
-    {'name' : 'Virgin Radio', 'url' : 'https://astreaming.edi.ro:8443/VirginRadio_aac'},
-    {'name' : 'Radio ZU', 'url' : 'https://ivm.antenaplay.ro/liveaudio/radiozu/playlist.m3u8'},
-    {'name' : 'Magic FM', 'url' : 'https://live.magicfm.ro/magicfm.aacp'},
-    {'name' : 'Rock FM', 'url' : 'https://live.rockfm.ro/rockfm.aacp'},
-    {'name' : 'Pro FM', 'url' : 'https://edge126.rcs-rds.ro/profm/profm.mp3'},
-    {'name' : 'Guerilla', 'url' : 'https://live.guerrillaradio.ro:8443/guerrilla.aac'},
-    {'name' : 'm2O', 'url' : 'https://4c4b867c89244861ac216426883d1ad0.msvdn.net/radiom2o/radiom2o/master_ma.m3u8'},
-    {'name' : 'Antenne Bayern', 'url' : 'https://stream.antenne.de/antenne/stream/mp3'}
-]
+radioStations = {
+    'Kiss FM' : 'https://live.kissfm.ro/kissfm.aacp',
+    'Europa FM' : 'https://astreaming.edi.ro:8443/EuropaFM_aac',
+    'Digi FM' : 'http://edge76.rdsnet.ro:84/digifm/digifm.mp3',
+    'Radio Iasi?' : 'http://89.238.227.6:8202/',
+    'Virgin Radio' : 'https://astreaming.edi.ro:8443/VirginRadio_aac',
+    'Radio ZU' : 'https://ivm.antenaplay.ro/liveaudio/radiozu/playlist.m3u8',
+    'Magic FM' : 'https://live.magicfm.ro/magicfm.aacp',
+    'Rock FM' : 'https://live.rockfm.ro/rockfm.aacp',
+    'Pro FM' : 'https://edge126.rcs-rds.ro/profm/profm.mp3',
+    'Guerilla' : 'https://live.guerrillaradio.ro:8443/guerrilla.aac',
+    'm2O' : 'https://4c4b867c89244861ac216426883d1ad0.msvdn.net/radiom2o/radiom2o/master_ma.m3u8',
+    'Antenne Bayern' : 'https://stream.antenne.de/antenne/stream/mp3'
+}
 
-def play():
-    instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
-    player = instance.media_player_new()
-    media = instance.media_new(radioStations[0]['url'])
+radioStationsList = [radio for radio in radioStations.keys()]
+radioStationsList.sort()
+
+DEFAULT_RADIO = 'Kiss FM'
+
+def play(radio):
+    media = instance.media_new(radioStations.get(radio))
     player.set_media(media)
     player.play()
+
+instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
+player = instance.media_player_new()
 
 rootFrame = Tk()
 rootFrame.title("Radio")
 
-mainFrame = ttk.Frame(rootFrame)
-mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
+mainFrame = ttk.Frame(rootFrame, padding=20)
 
-radioNowPlaying = radioStations[0]['name']
-nowPlayingLabel = ttk.Label(mainFrame, text=radioNowPlaying)
-playButton = ttk.Button(mainFrame, text="Play", command = play)
+selectedRadio = StringVar()
+selectRadio = ttk.Combobox(mainFrame, state='readonly', textvariable=selectedRadio)
+selectRadio['values'] = radioStationsList
+selectRadio.current(selectRadio['values'].index(DEFAULT_RADIO))
+selectRadio.bind("<<ComboboxSelected>>", play(selectedRadio.get()))
 
-ttk.Label(mainFrame, text="Now playing:").grid(column=1, row=1, sticky=(W, E))
-nowPlayingLabel.grid(column=1, row=2, sticky=(W, E))
-playButton.grid(column=1, row=3, sticky=(W))
+
+nowPlayingLabel = ttk.Label(mainFrame, textvariable=selectedRadio)
+playButton = ttk.Button(mainFrame, text="Play", command=lambda: play(selectedRadio.get()))
+
+mainFrame.grid(column=0, row=0)
+selectRadio.grid(column=1, row=0)
+ttk.Label(mainFrame, text="Radio now playing:").grid(column=1, row=1)
+nowPlayingLabel.grid(column=2, row=1)
+playButton.grid(column=1, row=2, columnspan=2)
 
 
 rootFrame.mainloop()
-
-"""
-#define VLC instance
-instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
-instance.log_unset()
-
-#Define VLC player
-player = instance.media_player_new()
-
-for radio in radioStations:
-    radioIndex = radioStations.index(radio)
-    print(radioIndex+1, '-', radioStations[radioIndex]['name'])
-
-selectedRadio = 0
-while True:
-    # time.sleep(1)
-    selectRadio = input("Select radio number ('0' for exit; default '1'): ") or '1'
-    if selectRadio.lower() == 'n':
-        if selectedRadio == len(radioStations)-1:
-            selectedRadio = 0
-        else:
-            selectedRadio += 1
-    elif selectRadio.lower() == 'p':
-        if selectedRadio == 0:
-            selectedRadio = len(radioStations)-1
-        else:
-            selectedRadio -= 1
-    elif selectRadio == '0':
-        break
-    else:
-        try:
-            selectedRadio = int(selectRadio)-1
-        except:
-            continue
-        else:
-            if selectedRadio < 0 or selectedRadio > len(radioStations)-1:
-                continue
-    media = instance.media_new(radioStations[selectedRadio]['url'])
-    player.set_media(media)
-    player.play()
-    print('\nNow playing:', radioStations[selectedRadio]['name'], '\n')
-    continue
-  """  
