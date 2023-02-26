@@ -1,5 +1,4 @@
 import vlc
-from operator import itemgetter
 from tkinter import *
 from tkinter import ttk
 
@@ -18,39 +17,76 @@ radioStations = {
     'Antenne Bayern' : 'https://stream.antenne.de/antenne/stream/mp3'
 }
 
-radioStationsList = [radio for radio in radioStations.keys()]
-radioStationsList.sort()
+radioStationsNames = sorted(radioStations, key=str.lower)
 
 DEFAULT_RADIO = 'Kiss FM'
 
-def play(radio):
+def playRadio():
+    radio = selectedRadio.get()
     media = instance.media_new(radioStations.get(radio))
     player.set_media(media)
     player.play()
 
-instance = vlc.Instance('--input-repeat=-1', '--fullscreen')
+def stopRadio():
+    player.stop()
+
+def updateCombobox(event):
+    playRadio()
+
+def previousRadio():
+    currentRadioIndex = radioStationsNames.index(selectedRadio.get())
+    maxRadioIndex = len(radioStationsNames)-1
+    if currentRadioIndex == 0:
+        selectRadioCombobox.set(radioStationsNames[maxRadioIndex])
+    else:
+        selectRadioCombobox.set(radioStationsNames[currentRadioIndex-1])
+    playRadio()
+
+def nextRadio():
+    currentRadioIndex = radioStationsNames.index(selectedRadio.get())
+    maxRadioIndex = len(radioStationsNames)-1
+    if currentRadioIndex == maxRadioIndex:
+        selectRadioCombobox.set(radioStationsNames[0])
+    else:
+        selectRadioCombobox.set(radioStationsNames[currentRadioIndex+1])
+    playRadio()
+
+#initialize VLC
+instance = vlc.Instance()
 player = instance.media_player_new()
 
+#initialize Tkinter
 rootFrame = Tk()
 rootFrame.title("Radio")
-
 mainFrame = ttk.Frame(rootFrame, padding=20)
 
+#region Widget creation
 selectedRadio = StringVar()
-selectRadio = ttk.Combobox(mainFrame, state='readonly', textvariable=selectedRadio)
-selectRadio['values'] = radioStationsList
-selectRadio.current(selectRadio['values'].index(DEFAULT_RADIO))
-selectRadio.bind("<<ComboboxSelected>>", play(selectedRadio.get()))
+selectRadioCombobox = ttk.Combobox(
+    mainFrame,
+    state='readonly',
+    justify='center',
+    values=radioStationsNames,
+    height=20,
+    textvariable=selectedRadio
+)
+selectRadioCombobox.current(radioStationsNames.index(DEFAULT_RADIO))
+selectRadioCombobox.bind("<<ComboboxSelected>>", updateCombobox)
+playButton = ttk.Button(mainFrame, text="Play", command=playRadio)
+stopButton = ttk.Button(mainFrame, text="Stop", command=stopRadio)
+previousButton = ttk.Button(mainFrame, text="Prev", command=previousRadio)
+nextButton = ttk.Button(mainFrame, text="Next", command=nextRadio)
+#endregion
 
-
-nowPlayingLabel = ttk.Label(mainFrame, textvariable=selectedRadio)
-playButton = ttk.Button(mainFrame, text="Play", command=lambda: play(selectedRadio.get()))
-
+#region Widget arrangement
 mainFrame.grid(column=0, row=0)
-selectRadio.grid(column=1, row=0)
-ttk.Label(mainFrame, text="Radio now playing:").grid(column=1, row=1)
-nowPlayingLabel.grid(column=2, row=1)
-playButton.grid(column=1, row=2, columnspan=2)
+selectRadioCombobox.grid(column=1, row=0, columnspan=2)
+playButton.grid(column=1, row=2)
+stopButton.grid(column=2, row=2)
+previousButton.grid(column=1, row=3)
+nextButton.grid(column=2, row=3)
+#endregion
 
+playRadio()
 
 rootFrame.mainloop()
