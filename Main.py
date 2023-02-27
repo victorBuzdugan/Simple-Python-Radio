@@ -80,11 +80,11 @@ nextButton = ttk.Button(mainFrame, text="Next", command=nextRadio)
 
 #region Widget arrangement
 mainFrame.grid(column=0, row=0)
-selectRadioCombobox.grid(column=1, row=0, columnspan=2)
-playButton.grid(column=1, row=2)
-stopButton.grid(column=2, row=2)
-previousButton.grid(column=1, row=3)
-nextButton.grid(column=2, row=3)
+selectRadioCombobox.grid(column=1, row=0, columnspan=2, padx=5, pady=5)
+playButton.grid(column=1, row=2, padx=5, pady=5)
+stopButton.grid(column=2, row=2, padx=5, pady=5)
+previousButton.grid(column=1, row=3, padx=5, pady=5)
+nextButton.grid(column=2, row=3, padx=5, pady=5)
 #endregion
 
 playRadio()
