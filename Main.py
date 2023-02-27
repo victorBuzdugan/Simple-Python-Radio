@@ -1,10 +1,13 @@
 import vlc
 import json
+import os
 from tkinter import *
 from tkinter import ttk
 
 #import radio stations file
-with open('RadioStations.json', 'r') as jsonFile:
+base_dir = os.path.dirname(__file__)
+file_path = os.path.join(base_dir, './RadioStations.json')
+with open(file_path, 'r') as jsonFile:
   radioStations = json.load(jsonFile)
 radioStations.pop("_comment")
 DEFAULT_RADIO = list(radioStations.keys())[0]
