@@ -45,6 +45,7 @@ def nextRadio():
 
 #initialize VLC
 instance = vlc.Instance()
+instance.log_unset()
 player = instance.media_player_new()
 
 #initialize Tkinter
