@@ -6,7 +6,7 @@ from tkinter import ttk
 
 #import radio stations file
 base_dir = os.path.dirname(__file__)
-file_path = os.path.join(base_dir, './RadioStations.json')
+file_path = os.path.join(base_dir, 'RadioStations.json')
 with open(file_path, 'r') as jsonFile:
   radioStations = json.load(jsonFile)
 radioStations.pop("_comment")
